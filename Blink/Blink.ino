@@ -23,6 +23,7 @@
 */
 int blueLED = 12;
 int yellowLED = 11;
+int redLED = 13;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -34,11 +35,15 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   digitalWrite(blueLED, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(3000);                      // wait for a second
+  delay(1000);                      // wait for a second
   digitalWrite(blueLED, LOW);   // turn the LED off by making the voltage LOW
   delay(500);                      // wait for a second
   digitalWrite(yellowLED, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(3000);                      // wait for a second
+  delay(500);                      // wait for a second
   digitalWrite(yellowLED, LOW);   // turn the LED off by making the voltage LOW
+  delay(500);                      // wait for a second
+  digitalWrite(redLED, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(50);                      // wait for a second
+  digitalWrite(redLED, LOW);   // turn the LED off by making the voltage LOW
   delay(500);                      // wait for a second
 }
