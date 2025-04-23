@@ -1,53 +1,45 @@
-/*
-  Fade
+const int ledPins[] = {5, 6, 9, 10, 11};  // Array for your specific LED pins
+const int numLeds = 5;  // Number of LEDs
+int brightness[] = {0, 0, 0, 0, 0};  // Start brightness of LEDs
+int fadeAmount = 5;  // Amount to change brightness (same for all LEDs)
+unsigned long previousMillis = 0;  // Store last time update
+unsigned long interval = 30;  // Time between updates (change this for speed)
+int currentLed = 0;  // Current LED index
 
-  This example shows how to fade an LED on pin 9 using the analogWrite()
-  function.
-
-  The analogWrite() function uses PWM, so if you want to change the pin you're
-  using, be sure to use another PWM capable pin. On most Arduino, the PWM pins
-  are identified with a "~" sign, like ~3, ~5, ~6, ~9, ~10 and ~11.
-
-  This example code is in the public domain.
-
-  https://docs.arduino.cc/built-in-examples/basics/Fade/
-*/
-
-
-int whiteled = 9;         // the PWM pin the LED is attached to
-int greenled = 10;         // the PWM pin the LED is attached to
-int redled = 11;         // the PWM pin the LED is attached to
-int yellowled = 6;         // the PWM pin the LED is attached to
-int blueled = 5;         // the PWM pin the LED is attached to
-int brightness = 0;  // how bright the LED is
-int fadeAmount = 5;  // how many points to fade the LED by
-
-// the setup routine runs once when you press reset:
 void setup() {
-  // declare pin 9 to be an output:
-  pinMode(whiteled, OUTPUT);
-  pinMode(greenled, OUTPUT);
-  pinMode(redled, OUTPUT);
-  pinMode(yellowled, OUTPUT);
-  pinMode(blueled, OUTPUT);
+  // Set up the LED pins as output
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
 }
 
-// the loop routine runs over and over again forever:
 void loop() {
-  // set the brightness of pin 9:
-  analogWrite(whiteled, brightness);
-  analogWrite(greenled, brightness);
-  analogWrite(redled, brightness);
-  analogWrite(yellowled, brightness);
-  analogWrite(blueled, brightness);
+  unsigned long currentMillis = millis();
 
-  // change the brightness for next time through the loop:
-  brightness = brightness + fadeAmount;
+  // Check if it's time to update the LEDs
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;  // Save the current time
 
-  // reverse the direction of the fading at the ends of the fade:
-  if (brightness <= 0 || brightness >= 255) {
-    fadeAmount = -fadeAmount;
+    // Fade current LED
+    brightness[currentLed] += fadeAmount;
+
+    // If the LED is at the extremes (0 or 255), reverse the fade direction
+    if (brightness[currentLed] <= 0 || brightness[currentLed] >= 255) {
+      fadeAmount = -fadeAmount;  // Reverse the fade direction
+    }
+
+    // Update the current LED's brightness
+    analogWrite(ledPins[currentLed], brightness[currentLed]);
+
+    // If the current LED has finished fading, move to the next LED
+    if (brightness[currentLed] == 0 || brightness[currentLed] == 255) {
+      // Move to the next LED
+      currentLed++;
+
+      // If we reached the last LED, reset to the first LED
+      if (currentLed >= numLeds) {
+        currentLed = 0;
+      }
+    }
   }
-  // wait for 30 milliseconds to see the dimming effect
-  delay(30);
 }
